@@ -1,0 +1,39 @@
+from google.colab import drive
+drive.mount('/content/drive')
+
+
+data_path = '/content/drive/MyDrive/Colab Notebooks/Datasets/Potato'
+
+
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+
+generator_train = ImageDataGenerator(
+                rescale=1./255,
+                validation_split=0.0,
+                dtype=None			//default type
+)
+
+
+
+train = generator_train.flow_from_directory('/content/drive/MyDrive/Colab Notebooks/Datasets/Potato', target_size=(64,64),batch_size=32,/*beshi batch_size inaccurate result asbe and kom hole train tme beshi lagbe*/class_mode='categorical'//if binary then only 2 class possible*/,color_mode='rgb')
+
+
+import numpy as np			
+import matplotlib.pyplot as plt
+
+
+class_dict /*class dictinary*/= train.class_indices
+classes = list(class_dict.keys())
+images, labels = next(train)
+
+plt.figure(figsize= (20,20))
+
+for i in range(16):
+  plt.subplot(4,4,i+1)/* 4X4 image show korbe*/
+  image = images[i]
+  plt.imshow(image)			/*For image showing*/
+  index = np.argmax(labels[i])
+  class_name = classes[index]
+  plt.title(class_name, color='k', fontsize=20)
+plt.show()
